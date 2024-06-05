@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.model.PremiumDetail;
 import com.example.demo.model.User;
 import com.example.demo.service.Userservice;
 
@@ -31,6 +34,18 @@ public class Usercontroller {
 	        } else {
 	            return ResponseEntity.notFound().build();
 	        }
+	    }
+	    @PostMapping("/premiumDetails")
+	    public ResponseEntity<PremiumDetail> createPremiumDetail(@RequestBody PremiumDetail premiumDetail) {
+	        Optional<PremiumDetail> createdPremiumDetail = userservice.createPremiumDetail(premiumDetail);
+	        return createdPremiumDetail.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
+	    }
+	   
+
+	    @GetMapping("/premiumDetails/{id}")
+	    public ResponseEntity<PremiumDetail> getPremiumDetailById(@PathVariable Long id) {
+	        Optional<PremiumDetail> premiumDetail = userservice.getPremiumDetailById(id);
+	        return premiumDetail.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	    }
 
 }
